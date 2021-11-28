@@ -10,8 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Projetg29">
         <activity
-            android:name=".ModifierServiceActivity"
-            android:exported="false" />
+            android:name=".InscriptionEmploye"
+            android:exported="true" />
         <activity
             android:name=".ClientActivity"
             android:exported="true" />

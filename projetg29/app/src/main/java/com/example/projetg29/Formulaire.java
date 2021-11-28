@@ -25,6 +25,4 @@ public class Formulaire {
         return map.get(info);
     }
 
-
-
 }

@@ -53,7 +53,6 @@ public class InscriptionAdmin extends AppCompatActivity {
                     }
                 }
 
-                // Supprimer tous les comptes de la base de données (fonction temporaire afin de tester)
                 else if(username.equals("delete")){
                     MyDBHandler db = new MyDBHandler(getApplicationContext());
                     db.deleteAll();
@@ -88,9 +87,7 @@ public class InscriptionAdmin extends AppCompatActivity {
     public void signup(Administrateur compte){
 
         MyDBHandler dbHandler = new MyDBHandler(this);
-        // Vérifier si le nom de compte n'existe pas ou qu'il existe mais dans un autre type de compte
-        if(dbHandler.findCompte(compte.getUsername()) == null || (dbHandler.findCompte(compte.getUsername()) != null && !dbHandler.findCompte(compte.getUsername()).getType().equals("Administrateur"))) {
-            // Créer un nouveau compte
+        if(dbHandler.findCompte(compte.getUsername()) == null) {
             dbHandler.addCompte(compte);
             Toast.makeText(getApplicationContext(), "Compte créé avec succès", Toast.LENGTH_LONG).show();
         }
@@ -114,7 +111,7 @@ public class InscriptionAdmin extends AppCompatActivity {
     public void signup(Employe compte){
 
         MyDBHandler dbHandler = new MyDBHandler(this);
-        if(dbHandler.findCompte(compte.getUsername()) == null || (dbHandler.findCompte(compte.getUsername()) != null && !dbHandler.findCompte(compte.getUsername()).getType().equals("Employé"))) {
+        if(dbHandler.findCompte(compte.getUsername()) == null) {
             dbHandler.addCompte(compte);
             Toast.makeText(getApplicationContext(), "Compte créé avec succès", Toast.LENGTH_LONG).show();
         }
@@ -138,14 +135,14 @@ public class InscriptionAdmin extends AppCompatActivity {
     public void signup(Client compte){
 
         MyDBHandler dbHandler = new MyDBHandler(this);
-        if(dbHandler.findCompte(compte.getUsername()) == null || (dbHandler.findCompte(compte.getUsername()) != null && !dbHandler.findCompte(compte.getUsername()).getType().equals("Client"))) {
+        if(dbHandler.findCompte(compte.getUsername()) == null) {
             dbHandler.addCompte(compte);
             Toast.makeText(getApplicationContext(), "Compte créé avec succès", Toast.LENGTH_LONG).show();
         }
         else{
             Compte existant = dbHandler.findCompte(compte.getUsername());
             if(!existant.getPassword().equals(compte.getPassword())){
-                Toast.makeText(getApplicationContext(), dbHandler.findCompte(compte.getUsername()).getType(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Mot de passe incorrect", Toast.LENGTH_LONG).show();
                 return;
             }
             else {

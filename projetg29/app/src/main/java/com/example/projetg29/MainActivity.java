@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent otherActivity = new Intent(getApplicationContext(), InscriptionAdmin.class);
+                Intent otherActivity = new Intent(getApplicationContext(), InscriptionEmploye.class);
                 otherActivity.putExtra("user_type", "employé");
                 startActivity(otherActivity);
             }
