@@ -10,19 +10,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Projetg29">
         <activity
-            android:name=".InscriptionEmploye"
-            android:exported="true" />
-        <activity
             android:name=".ClientActivity"
             android:exported="true" />
         <activity
             android:name=".AdminActivity"
             android:exported="true" />
         <activity
+            android:name=".ModifierServiceActivity"
+            android:exported="true" />
+        <activity
             android:name=".EmployeActivity"
             android:exported="true" />
         <activity
-            android:name=".InscriptionAdmin"
+            android:name=".Inscription"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

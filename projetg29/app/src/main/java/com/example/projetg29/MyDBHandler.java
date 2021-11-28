@@ -47,13 +47,15 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
     // Ajouter un string ################################################
-    public void addString(String string){
+    /* public void addString(String string){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.putAll(string);
         db.insert(TABLE_COMPTES, null, values);
         db.close();
     }
+
+     */
 
     public Compte findCompte(String username){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -79,15 +81,15 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return compte;
     }
 
-    public boolean deleteCompte(String username){
+    public boolean deleteCompte(String username, String type){
         boolean result = false;
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "Select * FROM " + TABLE_COMPTES + " WHERE " + COLUMN_USERNAME + " = \"" + username + "\"";
+        String query = "Select * FROM " + TABLE_COMPTES + " WHERE " + COLUMN_USERNAME + " = \"" + username + "\" AND " + COLUMN_USERTYPE + " = \"" + type + "\"";
         Cursor cursor = db.rawQuery(query, null);
 
         if(cursor.moveToFirst()){
             String userStr = cursor.getString(0);
-            db.delete(TABLE_COMPTES, COLUMN_USERNAME + " = '" + userStr+"'", null);
+            db.delete(TABLE_COMPTES, COLUMN_USERNAME + " = '" + userStr+"' AND " + COLUMN_USERTYPE + " = \"" + type + "\"", null);
             cursor.close();
             result = true;
         }

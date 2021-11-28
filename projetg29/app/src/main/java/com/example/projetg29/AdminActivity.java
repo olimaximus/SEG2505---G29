@@ -1,6 +1,7 @@
 package com.example.projetg29;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,9 +20,11 @@ import java.util.LinkedList;
 public class AdminActivity extends AppCompatActivity {
     Administrateur compte;
     String compte_a_supprimer;
+    String type_a_supprimer;
     LinkedList<Service> servicesList;
     String[] services;
     Spinner dropdown_service;
+    Service selected_service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +34,12 @@ public class AdminActivity extends AppCompatActivity {
         // Définir les éléments du layout
         TextView textView = findViewById(R.id.textView5);
         Spinner dropdown = findViewById(R.id.dropDown_comptes);
-        Button supprimer = findViewById(R.id.supprimer_compte);
+        Button supprimerCompte = findViewById(R.id.supprimer_compte);
         dropdown_service = findViewById(R.id.dropDown_Services);
         EditText serviceName = findViewById(R.id.editServiceName);
         Button addService = findViewById(R.id.button_addService);
+        Button supprimerService = findViewById(R.id.supprimer_service);
+        Button modifierService = findViewById(R.id.button_modifier);
         if(servicesList == null) {
             servicesList = new LinkedList<>();
             servicesList.add(new Service());
@@ -62,17 +67,18 @@ public class AdminActivity extends AppCompatActivity {
             comptes[i] = temp+" ("+comptesList.removeFirst()+")";
         }
 
-        // Créer un adapter pour le dropdown
+        // Créer un adapter pour le dropdown comptes
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, comptes);
         dropdown.setAdapter(adapter);
 
-        // Élément sélectionné par le dropdown
+        // Élément sélectionné par le dropdown comptes
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String select = comptes[position];
                 int i = select.indexOf(' ');
                 compte_a_supprimer = select.substring(0, i);
+                type_a_supprimer = select.substring(i+2, select.length()-1);
             }
 
             @Override
@@ -86,16 +92,11 @@ public class AdminActivity extends AppCompatActivity {
 
 
 
-
-
-        // Créer un adapter pour le dropdown Service
-
-
         // Élément sélectionné par le dropdown Service
         dropdown_service.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Service selectService = servicesList.get(position);
+                selected_service = servicesList.get(position);
             }
 
             @Override
@@ -108,13 +109,13 @@ public class AdminActivity extends AppCompatActivity {
         // Mettre à jour le texte
         textView.setText("Bienvenue "+compte.getUsername()+", vous êtes connecté en tant que Administrateur");
 
-        // Message de confirmation de suppression
+        // Message de confirmation de suppression de compte
         DialogInterface.OnClickListener confirm_delete = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        dbHandler.deleteCompte(compte_a_supprimer);
+                        dbHandler.deleteCompte(compte_a_supprimer, type_a_supprimer);
                         dialog.dismiss();
                         finish();
                         startActivity(getIntent());
@@ -126,11 +127,11 @@ public class AdminActivity extends AppCompatActivity {
             }
         };
 
-        // Fonction du bouton supprimer
-        supprimer.setOnClickListener(new View.OnClickListener() {
+        // Fonction du bouton supprimer compte
+        supprimerCompte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(compte_a_supprimer.equals("admin")){
+                if(type_a_supprimer.equals("Administrateur")){
                     Toast.makeText(getApplicationContext(),"Vous ne pouvez pas supprimer ce compte", Toast.LENGTH_LONG).show();
                 }
                 else {
@@ -145,9 +146,61 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String name = serviceName.getText().toString();
-                Service service = new Service(name);
-                servicesList.add(service);
-                updateServices();
+                if(name.equals("")){
+                    Toast.makeText(getApplicationContext(), "Nom de service invalide", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Service service = new Service(name);
+                    // Retirer l'élément bidon qui fait fonctionner le dropdown
+                    if(servicesList.getFirst().getName().equals("")){
+                        servicesList.removeFirst();
+                    }
+                    // Vérifier si le service existe déja
+                    for(int i = 0; i < servicesList.size(); i++){
+                        if(service.getName().equals(servicesList.get(i).getName())){
+                            Toast.makeText(getApplicationContext(), "Ce service existe déja", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                    servicesList.add(service);
+                    Toast.makeText(getApplicationContext(), "Service ajouté avec succès", Toast.LENGTH_LONG).show();
+                    updateServices();
+                    dropdown_service.setSelection(services.length-1);
+                }
+            }
+
+        });
+
+        // Fonction du bouton supprimer service
+        supprimerService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Vérifier si un élément bidon est sélectionné
+                if(selected_service.getName().equals("")){
+                    Toast.makeText(getApplicationContext(), "Aucun service à supprimer", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    servicesList.remove(selected_service);
+                    if(servicesList.isEmpty()){
+                        servicesList.add(new Service(""));
+                    }
+                    updateServices();
+                }
+            }
+        });
+
+        // Fonction du bouton modifier service
+        modifierService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selected_service.getName().equals("")){
+                    Toast.makeText(getApplicationContext(), "Aucun service à modifier", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent intent = new Intent(AdminActivity.this, ModifierServiceActivity.class);
+                    intent.putExtra("Service", selected_service.getName());
+                    startActivity(intent);
+                }
             }
         });
 
@@ -163,9 +216,5 @@ public class AdminActivity extends AppCompatActivity {
         dropdown_service.setAdapter(adapterservice);
 
     }
-
-
-
-
 
 }

@@ -39,6 +39,9 @@ public class EmployeActivity extends AppCompatActivity {
         EditText serviceName = findViewById(R.id.editTextDate);
         Button addService = findViewById(R.id.button_addService);
         dropdown_service = findViewById(R.id.dropDown_Services);
+        Button creer = findViewById(R.id.button5);
+        this.heure_ouverture_edit = findViewById(R.id.editTextDate);
+        this.Nom_entrepreneur_edit = findViewById(R.id.editTextTextPersonName);
 
         if(servicesList == null) {
             servicesList = new LinkedList<>();
@@ -58,10 +61,7 @@ public class EmployeActivity extends AppCompatActivity {
         compte = new Employe (username, password);
 
 
-        // Définir les éléments du layout
-        Button creer = findViewById(R.id.button4);
-        this.heure_ouverture_edit = findViewById(R.id.editTextDate);
-        this.Nom_entrepreneur_edit = findViewById(R.id.editTextTextPersonName);
+
 
 
         // Mettre à jour le texte
@@ -96,6 +96,7 @@ public class EmployeActivity extends AppCompatActivity {
 
     }
     //Ajouter un string a la base des donnees
+    /*
     public void signup(String string){
 
         MyDBHandler dbHandler = new MyDBHandler(this);
@@ -108,8 +109,10 @@ public class EmployeActivity extends AppCompatActivity {
         // Transférer les informations à l'écran de bienvenue
         otherActivity.putExtra("user", compte.getUsername());
         otherActivity.putExtra("password", compte.getPassword());
-        startActivity(otherActivity);*/
+        startActivity(otherActivity);
     }
+
+     */
 }
 
 

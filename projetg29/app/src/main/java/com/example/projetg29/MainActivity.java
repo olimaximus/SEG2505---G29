@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent otherActivity = new Intent(getApplicationContext(), InscriptionAdmin.class);
+                Intent otherActivity = new Intent(getApplicationContext(), Inscription.class);
                 otherActivity.putExtra("user_type", "administrateur");
                 startActivity(otherActivity);
             }
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent otherActivity = new Intent(getApplicationContext(), InscriptionEmploye.class);
+                Intent otherActivity = new Intent(getApplicationContext(), Inscription.class);
                 otherActivity.putExtra("user_type", "employé");
                 startActivity(otherActivity);
             }
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent otherActivity = new Intent(getApplicationContext(), InscriptionAdmin.class);
+                Intent otherActivity = new Intent(getApplicationContext(), Inscription.class);
                 otherActivity.putExtra("user_type", "client");
                 startActivity(otherActivity);
             }

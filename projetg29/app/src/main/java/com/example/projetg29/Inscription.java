@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-public class InscriptionAdmin extends AppCompatActivity {
+public class Inscription extends AppCompatActivity {
 
     private EditText username_edit;
     private EditText password_edit;
