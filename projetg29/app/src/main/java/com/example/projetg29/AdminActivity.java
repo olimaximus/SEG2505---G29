@@ -40,13 +40,7 @@ public class AdminActivity extends AppCompatActivity {
         Button addService = findViewById(R.id.button_addService);
         Button supprimerService = findViewById(R.id.supprimer_service);
         Button modifierService = findViewById(R.id.button_modifier);
-        if(servicesList == null) {
-            servicesList = new LinkedList<>();
-            servicesList.add(new Service());
-        }
-        else{
 
-        }
 
 
 
@@ -88,6 +82,11 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         // Créer la liste d'éléments du dropdown Service
+        DBServices dbServices = new DBServices(AdminActivity.this);
+        servicesList = dbServices.getAllServices();
+        if(servicesList.size() == 0){
+            servicesList.add(new Service());
+        }
         updateServices();
 
 
@@ -207,7 +206,6 @@ public class AdminActivity extends AppCompatActivity {
 
     }
     public void updateServices(){
-
         services = new String[servicesList.size()];
         for (int i = 0; i < services.length; i++) {
             services[i] = servicesList.get(i).getName();

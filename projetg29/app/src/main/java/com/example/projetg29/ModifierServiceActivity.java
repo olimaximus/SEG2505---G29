@@ -57,7 +57,10 @@ public class ModifierServiceActivity extends AppCompatActivity {
         btnDocument.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ajouterDocument();
+                //ajouterDocument();
+
+                String test = service.getFormulaireMap();
+                Toast.makeText(getApplicationContext(), test, Toast.LENGTH_LONG).show();
             }
         });
 

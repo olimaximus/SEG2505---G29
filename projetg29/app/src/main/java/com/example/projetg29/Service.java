@@ -1,12 +1,18 @@
 package com.example.projetg29;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcel;
 
 import androidx.annotation.RequiresApi;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -29,6 +35,12 @@ public class Service {
         name = "";
         formulaire = new HashMap<>();
         document = new HashMap<>();
+    }
+
+    public Service(String name, HashMap<String, String> formulaire, HashMap<String, Intent> document){
+        this.name = name;
+        this.formulaire = formulaire;
+        this.document = document;
     }
 
     public String getName() {
@@ -105,4 +117,28 @@ public class Service {
         }
         return result;
     }
+
+    // Retourner la map en String pour la base de données
+    public String getFormulaireMap(){
+        JSONObject jsonObject = new JSONObject(formulaire);
+        String result = jsonObject.toString();
+        return result;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getDocumentMap(){
+        HashMap<String, String> newMap = new HashMap<>();
+        String[] keys = getImageKeys();
+        for(int i = 0; i < keys.length; i++){
+            Intent intent = document.get(keys[i]);
+            assert intent != null;
+            Uri uri = intent.getParcelableExtra("imageUri");
+            newMap.put(keys[i], uri.toString());
+        }
+        JSONObject jsonObject = new JSONObject(newMap);
+        String result = jsonObject.toString();
+        return result;
+    }
+
+
 }

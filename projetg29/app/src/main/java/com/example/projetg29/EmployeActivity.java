@@ -68,12 +68,12 @@ public class EmployeActivity extends AppCompatActivity {
         textView.setText("Bienvenue "+compte.getUsername()+", vous êtes connecté en tant que Employé");
 
         // Créer la liste d'éléments du dropdown services
-        LinkedList<String> comptesList;
-        MyDBHandler dbHandler = new MyDBHandler(this);
-        comptesList = dbHandler.getAllServices();
+        LinkedList<Service> comptesList;
+        DBServices dbServices = new DBServices(this);
+        comptesList = dbServices.getAllServices();
         String[] comptes = new String[comptesList.size()/2];
         for(int i = 0; i < comptes.length; i++){
-            String temp = comptesList.removeFirst();
+            String temp = comptesList.removeFirst().getName();
             comptes[i] = temp+" ("+comptesList.removeFirst()+")";
         }
 

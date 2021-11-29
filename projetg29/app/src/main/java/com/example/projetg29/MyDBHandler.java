@@ -123,20 +123,5 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return list;
     }
 
-    public LinkedList<String> getAllServices(){
-        LinkedList<String> list = new LinkedList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "Select * FROM " + TABLE_COMPTES;
-        Cursor cursor = db.rawQuery(query, null);
-        if(cursor.moveToFirst()){
-            while(!cursor.isAfterLast()){
-                String Service = cursor.getString(0);
 
-                list.add(Service);
-                cursor.moveToNext();
-
-            }
-        }
-        return list;
-    }
 }
