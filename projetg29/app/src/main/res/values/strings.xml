@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">projetg29</string>
+    <string-array name="Selection">
+        <item>Approuver</item>
+        <item>Rejeter</item>
+    </string-array>
+
+    <string-array name="Heures_ouverture">
+        <item>06h-10h</item>
+        <item>10h-14h</item>
+        <item>14h-18h</item>
+        <item>18h-22h</item>
+        <item>06h-12h</item>
+        <item>12h-18h</item>
+        <item>18h-00h</item>
+    </string-array>
+</resources>
