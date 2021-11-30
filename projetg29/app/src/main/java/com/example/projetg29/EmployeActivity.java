@@ -81,7 +81,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         // Créer la liste d'éléments du dropdown services
         LinkedList<String> comptesList;
         MyDBHandler dbHandler = new MyDBHandler(this);
-        comptesList = dbHandler.getAllServices();
+        comptesList = dbHandler.getAllComptes(); // *** Doit être implémenter pour les services
         String[] comptes = new String[comptesList.size()/2];
         for(int i = 0; i < comptes.length; i++){
             String temp = comptesList.removeFirst();

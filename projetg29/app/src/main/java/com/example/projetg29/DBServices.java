@@ -71,9 +71,11 @@ public class DBServices extends SQLiteOpenHelper {
             try{
                 JSONObject jsonObject = new JSONObject(rawFormulaire);
                 JSONArray names = jsonObject.names();
-                for(int i = 0; i < names.length(); i++){
-                    String key = names.getString(i);
-                    formulaire.put(key, jsonObject.optString(key));
+                if(names != null) {
+                    for (int i = 0; i < names.length(); i++) {
+                        String key = names.getString(i);
+                        formulaire.put(key, jsonObject.optString(key));
+                    }
                 }
             } catch (JSONException exception){
                 exception.printStackTrace();
@@ -85,13 +87,15 @@ public class DBServices extends SQLiteOpenHelper {
             try{
                 JSONObject jsonObject = new JSONObject(rawDocument);
                 JSONArray names = jsonObject.names();
-                for(int i = 0; i < names.length(); i++){
-                    String key = names.getString(i);
-                    String value = jsonObject.optString(key);
-                    Uri uri = Uri.parse(value);
-                    Intent intent = new Intent();
-                    intent.putExtra("imageUri", uri);
-                    document.put(key, intent);
+                if(names != null) {
+                    for (int i = 0; i < names.length(); i++) {
+                        String key = names.getString(i);
+                        String value = jsonObject.optString(key);
+                        Uri uri = Uri.parse(value);
+                        Intent intent = new Intent();
+                        intent.putExtra("imageUri", uri);
+                        document.put(key, intent);
+                    }
                 }
             } catch (JSONException exception){
                 exception.printStackTrace();
@@ -114,7 +118,7 @@ public class DBServices extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             String nameStr = cursor.getString(0);
-            db.delete(TABLE_SERVICES, COLUMN_NAME + " = "+ nameStr, null);
+            db.delete(TABLE_SERVICES, COLUMN_NAME + " = '"+ nameStr +"'", null);
             cursor.close();
             result = true;
         }

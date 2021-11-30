@@ -131,9 +131,13 @@ public class Service {
         String[] keys = getImageKeys();
         for(int i = 0; i < keys.length; i++){
             Intent intent = document.get(keys[i]);
-            assert intent != null;
-            Uri uri = intent.getParcelableExtra("imageUri");
-            newMap.put(keys[i], uri.toString());
+            if(intent!=null) {
+                Uri uri = intent.getParcelableExtra("imageUri");
+                newMap.put(keys[i], uri.toString());
+            }
+            else{
+                newMap.put(keys[i], "");
+            }
         }
         JSONObject jsonObject = new JSONObject(newMap);
         String result = jsonObject.toString();

@@ -19,6 +19,7 @@ public class ModifierServiceActivity extends AppCompatActivity {
     EditText input;
     Button btnFormulaire;
     Button btnDocument;
+    Button btnSave;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -29,7 +30,8 @@ public class ModifierServiceActivity extends AppCompatActivity {
         // Récupérer les infos de l'activité précédente
         Bundle extras = getIntent().getExtras();
         serviceName = extras.getString("Service");
-        service = new Service(serviceName);
+        DBServices dbServices = new DBServices(ModifierServiceActivity.this);
+        service = dbServices.findService(serviceName);
 
 
         // Définir les éléments du layout
@@ -39,6 +41,7 @@ public class ModifierServiceActivity extends AppCompatActivity {
         input = findViewById(R.id.editInfoService);
         btnFormulaire = findViewById(R.id.btn_addFormulaire);
         btnDocument = findViewById(R.id.btn_addDocument);
+        btnSave = findViewById(R.id.btnSaveService);
 
 
         // Mettre à jour le texte
@@ -57,10 +60,17 @@ public class ModifierServiceActivity extends AppCompatActivity {
         btnDocument.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ajouterDocument();
+                ajouterDocument();
 
-                String test = service.getFormulaireMap();
-                Toast.makeText(getApplicationContext(), test, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // Fonction du bouton sauvegarder
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                saveService();
             }
         });
 
@@ -110,5 +120,13 @@ public class ModifierServiceActivity extends AppCompatActivity {
             service.setImage(info, null);
             updateText();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void saveService(){
+        DBServices dbServices = new DBServices(ModifierServiceActivity.this);
+        dbServices.deleteService(service.getName());
+        dbServices.addService(service);
+        Toast.makeText(getApplicationContext(), "Service mis à jour avec succès", Toast.LENGTH_LONG).show();
     }
 }

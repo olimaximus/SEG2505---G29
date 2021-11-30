@@ -2,6 +2,7 @@ package com.example.projetg29;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -142,6 +144,7 @@ public class AdminActivity extends AppCompatActivity {
 
         // Fonction du bouton addService
         addService.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String name = serviceName.getText().toString();
@@ -161,6 +164,8 @@ public class AdminActivity extends AppCompatActivity {
                             return;
                         }
                     }
+                    DBServices dbServices1 = new DBServices(AdminActivity.this);
+                    dbServices1.addService(service);
                     servicesList.add(service);
                     Toast.makeText(getApplicationContext(), "Service ajouté avec succès", Toast.LENGTH_LONG).show();
                     updateServices();
@@ -179,6 +184,8 @@ public class AdminActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Aucun service à supprimer", Toast.LENGTH_LONG).show();
                 }
                 else{
+                    DBServices dbServices1 = new DBServices(AdminActivity.this);
+                    dbServices1.deleteService(selected_service.getName());
                     servicesList.remove(selected_service);
                     if(servicesList.isEmpty()){
                         servicesList.add(new Service(""));
