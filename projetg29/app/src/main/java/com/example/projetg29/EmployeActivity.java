@@ -143,7 +143,16 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         });
 
         // Fonction du bouton retirer service
-        
+        removeService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    deleteService();
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
 
 
     }
@@ -151,7 +160,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
-         Toast.makeText(parent.getContext(),text,Toast.LENGTH_LONG).show();
+         //Toast.makeText(parent.getContext(),text,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -208,6 +217,25 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
             dbHandler.deleteCompte(compte.getUsername(), "Employé");
             dbHandler.addEmploye(compte);
             updateText();
+            Toast.makeText(getApplicationContext(), "Service ajouté avec succès", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void deleteService() throws JSONException {
+        if(selected_service.getName().equals("")){
+            Toast.makeText(getApplicationContext(), "Veuillez d'abord choisir un service", Toast.LENGTH_LONG).show();
+        }
+        else if(!compte.containsService(selected_service)){
+            Toast.makeText(getApplicationContext(), "Ce service n'était pas choisi", Toast.LENGTH_LONG).show();
+        }
+        else{
+            compte.deleteService(selected_service.getName());
+            MyDBHandler dbHandler = new MyDBHandler(EmployeActivity.this);
+            dbHandler.deleteCompte(compte.getUsername(), "Employé");
+            dbHandler.addEmploye(compte);
+            updateText();
+            Toast.makeText(getApplicationContext(), "Service retiré avec succès", Toast.LENGTH_LONG).show();
+
         }
     }
 }
