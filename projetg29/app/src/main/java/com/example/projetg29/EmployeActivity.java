@@ -19,7 +19,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
 
     private EditText heure_ouverture_edit;
     private String heure_ouverture;
-    private String Service;
+    private Service selected_service;
     //private EditText Nom_entrepreneur_edit;
     //private String Nom_entrepreneur;
 
@@ -45,28 +45,21 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         spinner.setOnItemSelectedListener(this);
 
         // Définir les éléments du layout
-        TextView textView = findViewById(R.id.textView5);
-        Spinner dropdown = findViewById(R.id.dropDown_Services);
+        TextView textView = findViewById(R.id.textView7);
         //EditText serviceName = findViewById(R.id.editTextDate);
         Button addService = findViewById(R.id.button_addService);
         dropdown_service = findViewById(R.id.dropDown_Services);
 
-        if(servicesList == null) {
-            servicesList = new LinkedList<>();
-            servicesList.add(new Service());
-        }
-        else{
-            //None
 
-        }
 
 
         // Récuperer les informations de l'activité précédente
         Bundle extras = getIntent().getExtras();
         String username = extras.getString("user");
         String password = extras.getString("password");
+        MyDBHandler dbHandler = new MyDBHandler(EmployeActivity.this);
+        compte = dbHandler.findEmploye(username);
 
-        compte = new Employe (username, password);
 
 
         // Définir les éléments du layout
@@ -79,14 +72,25 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         textView.setText("Bienvenue "+compte.getUsername()+", vous êtes connecté en tant que Employé");
 
         // Créer la liste d'éléments du dropdown services
-        LinkedList<String> comptesList;
-        MyDBHandler dbHandler = new MyDBHandler(this);
-        comptesList = dbHandler.getAllComptes(); // *** Doit être implémenter pour les services
-        String[] comptes = new String[comptesList.size()/2];
-        for(int i = 0; i < comptes.length; i++){
-            String temp = comptesList.removeFirst();
-            comptes[i] = temp+" ("+comptesList.removeFirst()+")";
+        DBServices dbServices = new DBServices(EmployeActivity.this);
+        servicesList = dbServices.getAllServices();
+        if(servicesList.size() == 0){
+            servicesList.add(new Service());
         }
+        updateServices();
+
+        // Élément sélectionné par le dropdown Service
+        dropdown_service.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected_service = servicesList.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         // Option du bouton voir les demandes
         Button button6 = findViewById(R.id.button6);
@@ -147,6 +151,15 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         otherActivity.putExtra("password", compte.getPassword());
         startActivity(otherActivity);
     }*/
+
+    public void updateServices(){
+        services = new String[servicesList.size()];
+        for (int i = 0; i < services.length; i++) {
+            services[i] = servicesList.get(i).getName();
+        }
+        ArrayAdapter<String> adapterservice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, services);
+        dropdown_service.setAdapter(adapterservice);
+    }
 }
 
 

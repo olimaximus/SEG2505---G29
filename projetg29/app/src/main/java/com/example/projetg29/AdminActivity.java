@@ -20,13 +20,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.LinkedList;
 
 public class AdminActivity extends AppCompatActivity {
-    Administrateur compte;
-    String compte_a_supprimer;
-    String type_a_supprimer;
-    LinkedList<Service> servicesList;
-    String[] services;
-    Spinner dropdown_service;
-    Service selected_service;
+    private Administrateur compte;
+    private String compte_a_supprimer;
+    private String type_a_supprimer;
+    private LinkedList<Service> servicesList;
+    private String[] services;
+    private Spinner dropdown_service;
+    private Service selected_service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
