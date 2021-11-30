@@ -1,6 +1,7 @@
 package com.example.projetg29;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,7 +20,7 @@ import java.util.LinkedList;
 
 public class EmployeActivity extends AppCompatActivity  implements AdapterView.OnItemSelectedListener {
 
-    private EditText heure_ouverture_edit;
+
     private String heure_ouverture;
     private Service selected_service;
     //private EditText Nom_entrepreneur_edit;
@@ -34,6 +35,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
     Button addService;
     Button removeService;
     TextView servicesChoisis;
+    Button enregistrerHeures;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,10 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+        String[] heuresPossibles = getResources().getStringArray(R.array.Heures_ouverture);
+
+
+
 
         // Définir les éléments du layout
         TextView textView = findViewById(R.id.textView7);
@@ -56,6 +62,8 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         removeService = findViewById(R.id.btnRetirerService);
         dropdown_service = findViewById(R.id.dropDown_Services);
         servicesChoisis = findViewById(R.id.textServicesChoisis);
+        enregistrerHeures = findViewById(R.id.button5);
+
 
 
 
@@ -71,11 +79,14 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
             exception.printStackTrace();
         }
 
+        // Mettre la bonne heure si le compte avait déja choisi des heures
+        for(int i = 0; i < heuresPossibles.length; i++){
+            if(compte.getHeures().equals(heuresPossibles[i])){
+                spinner.setSelection(i);
+            }
+        }
 
-        // Définir les éléments du layout
-        /*Button creer = findViewById(R.id.button4);
-        this.heure_ouverture_edit = findViewById(R.id.editTextDate);
-        this.Nom_entrepreneur_edit = findViewById(R.id.editTextTextPersonName);*/
+
 
 
         // Mettre à jour le texte
@@ -117,17 +128,17 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
             }
         });
 
-        // Option du bouton enregistrer
-        /*creer.setOnClickListener(new View.OnClickListener() {
+        // Option du bouton enregistrerHeures
+        enregistrerHeures.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Récupérer le nom d'utilisateur et le mot de passe
-                heure_ouverture = heure_ouverture_edit.getText().toString();
-                Nom_entrepreneur = Nom_entrepreneur_edit.getText().toString();
-
-
+                try {
+                    saveHeures();
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
             }
-        });*/
+        });
 
 
         // Fonction du bouton Ajouter service
@@ -159,7 +170,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
     //Affichage des possibilite pour les heures d'ouverture
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String text = parent.getItemAtPosition(position).toString();
+        heure_ouverture = parent.getItemAtPosition(position).toString();
          //Toast.makeText(parent.getContext(),text,Toast.LENGTH_LONG).show();
     }
 
@@ -168,19 +179,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
 
     }
 
-    //Ajouter un string a la base des donnees
-    /*public void signup(String string){
-        MyDBHandler dbHandler = new MyDBHandler(this);
-        dbHandler.addString(string); == null) {
-        dbHandler.addString(string);
-        Toast.makeText(getApplicationContext(), "Enregistrer", Toast.LENGTH_LONG).show();
-        }
-        Intent otherActivity = new Intent(getApplicationContext(), ClientActivity.class);
-        // Transférer les informations à l'écran de bienvenue
-        otherActivity.putExtra("user", compte.getUsername());
-        otherActivity.putExtra("password", compte.getPassword());
-        startActivity(otherActivity);
-    }*/
+
 
     // Mettre à jour le dropdown services
     public void updateServices(){
@@ -237,6 +236,14 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
             Toast.makeText(getApplicationContext(), "Service retiré avec succès", Toast.LENGTH_LONG).show();
 
         }
+    }
+
+    public void saveHeures() throws JSONException {
+        compte.setHeures(heure_ouverture);
+        MyDBHandler dbHandler = new MyDBHandler(getApplicationContext());
+        dbHandler.deleteCompte(compte.getUsername(), "Employé");
+        dbHandler.addEmploye(compte);
+        Toast.makeText(getApplicationContext(), compte.getHeures(), Toast.LENGTH_LONG).show();
     }
 }
 

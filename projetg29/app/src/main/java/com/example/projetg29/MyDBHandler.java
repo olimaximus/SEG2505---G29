@@ -19,13 +19,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MyDBHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "compteDB.db";
     public static final String TABLE_COMPTES = "comptes";
     public static final String COLUMN_SERVICE = "Service";
     public static final String COLUMN_USERNAME = "username";
     public static final String COLUMN_PASSWORD = "password";
     public static final String COLUMN_USERTYPE = "usertype";
+    public static final String COLUMN_TIME = "time";
 
     public MyDBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,7 +35,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_COMPTES_TABLE = "CREATE TABLE " + TABLE_COMPTES + "(" + COLUMN_USERNAME + " TEXT,"
-                + COLUMN_PASSWORD + " TEXT," + COLUMN_USERTYPE + " TEXT," + COLUMN_SERVICE + " TEXT" +")";
+                + COLUMN_PASSWORD + " TEXT," + COLUMN_USERTYPE + " TEXT," + COLUMN_SERVICE + " TEXT," +COLUMN_TIME + " TEXT"+")";
         db.execSQL(CREATE_COMPTES_TABLE);
     }
 
@@ -64,6 +65,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         jsonObject.put("serviceArrays", employe.getServicesList());
         String servicesString = jsonObject.toString();
         values.put(COLUMN_SERVICE, servicesString);
+        values.put(COLUMN_TIME, employe.getHeures());
         db.insert(TABLE_COMPTES, null, values);
         db.close();
     }
@@ -152,6 +154,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             if (cursor.getString(2).equals("Employé")) {
                 compte = new Employe(cursor.getString(0), cursor.getString(1));
+                compte.setHeures(cursor.getString(4));
                 JSONObject jsonObject = new JSONObject(cursor.getString(3));
                 String services = jsonObject.get("serviceArrays").toString();
                 JSONArray jsonArray = new JSONArray(services);

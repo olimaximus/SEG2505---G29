@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 public class Employe extends Compte{
     private ArrayList<String> services;
+    private String heures;
 
     public Employe(String username, String password){
         super(username, password);
         setType("Employé");
         services = new ArrayList<>();
+        heures = "";
     }
 
     public ArrayList<String> getServicesList() {
@@ -37,4 +39,14 @@ public class Employe extends Compte{
         }
         return result;
     }
+
+    public void setHeures(String h){
+        heures = h;
+    }
+
+    public String getHeures(){
+        return heures;
+    }
+
+
 }
