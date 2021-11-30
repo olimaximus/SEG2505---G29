@@ -5,12 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.text.Edits;
 
 import com.example.projetg29.Compte;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,6 +53,20 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_COMPTES, null, values);
         db.close();
     }
+
+    public void addEmploye(Employe employe) throws JSONException {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USERNAME, employe.getUsername());
+        values.put(COLUMN_PASSWORD, employe.getPassword());
+        values.put(COLUMN_USERTYPE, employe.getType());
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("serviceArrays", employe.getServicesList());
+        String servicesString = jsonObject.toString();
+        values.put(COLUMN_SERVICE, servicesString);
+        db.insert(TABLE_COMPTES, null, values);
+        db.close();
+    }
     // Ajouter un string ################################################
     /* public void addString(String string){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -67,9 +85,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         Compte compte;
         if (cursor.moveToFirst()) {
-            if (cursor.getString(2) == "Administrateur") {
+            if (cursor.getString(2).equals("Administrateur")) {
                 compte = new Administrateur(cursor.getString(0), cursor.getString(1));
-            } else if (cursor.getString(2) == "Employé") {
+            } else if (cursor.getString(2).equals("Employé")) {
                 compte = new Employe(cursor.getString(0), cursor.getString(1));
             } else {
                 compte = new Client(cursor.getString(0), cursor.getString(1));
@@ -81,6 +99,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
         return compte;
     }
+
+
 
     public boolean deleteCompte(String username, String type) {
         boolean result = false;
@@ -124,7 +144,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return list;
     }
 
-    public Employe findEmploye(String username) {
+    public Employe findEmploye(String username) throws JSONException {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "Select * FROM " + TABLE_COMPTES + " WHERE " + COLUMN_USERNAME + " = \"" + username + "\" AND " + COLUMN_USERTYPE + " = \"" + "Employé" + "\"";
         Cursor cursor = db.rawQuery(query, null);
@@ -132,6 +152,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             if (cursor.getString(2).equals("Employé")) {
                 compte = new Employe(cursor.getString(0), cursor.getString(1));
+                JSONObject jsonObject = new JSONObject(cursor.getString(3));
+                String services = jsonObject.get("serviceArrays").toString();
+                JSONArray jsonArray = new JSONArray(services);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    compte.addService(new Service(jsonArray.get(i).toString()));
+                }
             }
             cursor.close();
         }

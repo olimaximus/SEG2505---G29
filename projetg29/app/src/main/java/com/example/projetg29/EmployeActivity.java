@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
+
 import java.util.LinkedList;
 
 public class EmployeActivity extends AppCompatActivity  implements AdapterView.OnItemSelectedListener {
@@ -29,6 +31,9 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
     LinkedList<Service> servicesList;
     String[] services;
     Spinner dropdown_service;
+    Button addService;
+    Button removeService;
+    TextView servicesChoisis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +52,10 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         // Définir les éléments du layout
         TextView textView = findViewById(R.id.textView7);
         //EditText serviceName = findViewById(R.id.editTextDate);
-        Button addService = findViewById(R.id.button_addService);
+        addService = findViewById(R.id.btnChoisirService);
+        removeService = findViewById(R.id.btnRetirerService);
         dropdown_service = findViewById(R.id.dropDown_Services);
+        servicesChoisis = findViewById(R.id.textServicesChoisis);
 
 
 
@@ -58,8 +65,11 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         String username = extras.getString("user");
         String password = extras.getString("password");
         MyDBHandler dbHandler = new MyDBHandler(EmployeActivity.this);
-        compte = dbHandler.findEmploye(username);
-
+        try {
+            compte = dbHandler.findEmploye(username);
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
 
 
         // Définir les éléments du layout
@@ -78,6 +88,11 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
             servicesList.add(new Service());
         }
         updateServices();
+        try {
+            updateText();
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
 
         // Élément sélectionné par le dropdown Service
         dropdown_service.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -115,14 +130,20 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         });*/
 
 
-        // Option pour voir les services et les selectionner
+        // Fonction du bouton Ajouter service
+        addService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    selectService();
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
 
-    /* - Lire les service qui ont ete prealablement cree par l'administrateur
-       - Selectionner un service
-
-
-
-    */
+        // Fonction du bouton retirer service
+        
 
 
     }
@@ -152,6 +173,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         startActivity(otherActivity);
     }*/
 
+    // Mettre à jour le dropdown services
     public void updateServices(){
         services = new String[servicesList.size()];
         for (int i = 0; i < services.length; i++) {
@@ -159,6 +181,34 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         }
         ArrayAdapter<String> adapterservice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, services);
         dropdown_service.setAdapter(adapterservice);
+    }
+
+    // Mettre à jour les services choisis par l'employé
+    public void updateText() throws JSONException {
+        String result = "Services sélectionnés:\n";
+        MyDBHandler dbHandler = new MyDBHandler(getApplicationContext());
+        Employe newcompte = dbHandler.findEmploye(compte.getUsername());
+        for(int i = 0; i < newcompte.getServicesList().size(); i++){
+            result += "\n" + newcompte.getServicesList().get(i);
+        }
+        servicesChoisis.setText(result);
+    }
+
+    // Ajouter un service
+    public void selectService() throws JSONException {
+        if(selected_service.getName().equals("")){
+            Toast.makeText(getApplicationContext(), "Veuillez d'abord choisir un service", Toast.LENGTH_LONG).show();
+        }
+        else if(compte.containsService(selected_service)){
+            Toast.makeText(getApplicationContext(), "Ce service a déjà été ajouté", Toast.LENGTH_LONG).show();
+        }
+        else{
+            compte.addService(selected_service);
+            MyDBHandler dbHandler = new MyDBHandler(EmployeActivity.this);
+            dbHandler.deleteCompte(compte.getUsername(), "Employé");
+            dbHandler.addEmploye(compte);
+            updateText();
+        }
     }
 }
 

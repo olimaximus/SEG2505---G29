@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 
 public class Inscription extends AppCompatActivity {
 
@@ -66,7 +68,11 @@ public class Inscription extends AppCompatActivity {
                     }
                     else {
                         Employe compte = new Employe(username, password);
-                        signup(compte);
+                        try {
+                            signup(compte);
+                        } catch (JSONException exception) {
+                            exception.printStackTrace();
+                        }
                     }
                 }
 
@@ -87,7 +93,7 @@ public class Inscription extends AppCompatActivity {
     public void signup(Administrateur compte){
 
         MyDBHandler dbHandler = new MyDBHandler(this);
-        if(dbHandler.findCompte(compte.getUsername()) == null) {
+        if(dbHandler.findCompte(compte.getUsername()) == null || (dbHandler.findCompte(compte.getUsername()) != null && !dbHandler.findCompte(compte.getUsername()).getType().equals("Administrateur"))) {
             dbHandler.addCompte(compte);
             Toast.makeText(getApplicationContext(), "Compte créé avec succès", Toast.LENGTH_LONG).show();
         }
@@ -108,11 +114,11 @@ public class Inscription extends AppCompatActivity {
         startActivity(otherActivity);
     }
 
-    public void signup(Employe compte){
+    public void signup(Employe compte) throws JSONException {
 
         MyDBHandler dbHandler = new MyDBHandler(this);
-        if(dbHandler.findCompte(compte.getUsername()) == null) {
-            dbHandler.addCompte(compte);
+        if(dbHandler.findCompte(compte.getUsername()) == null || (dbHandler.findCompte(compte.getUsername()) != null && !dbHandler.findCompte(compte.getUsername()).getType().equals("Employé"))) {
+            dbHandler.addEmploye(compte);
             Toast.makeText(getApplicationContext(), "Compte créé avec succès", Toast.LENGTH_LONG).show();
         }
         else{
@@ -135,7 +141,7 @@ public class Inscription extends AppCompatActivity {
     public void signup(Client compte){
 
         MyDBHandler dbHandler = new MyDBHandler(this);
-        if(dbHandler.findCompte(compte.getUsername()) == null) {
+        if(dbHandler.findCompte(compte.getUsername()) == null || (dbHandler.findCompte(compte.getUsername()) != null && !dbHandler.findCompte(compte.getUsername()).getType().equals("Client"))) {
             dbHandler.addCompte(compte);
             Toast.makeText(getApplicationContext(), "Compte créé avec succès", Toast.LENGTH_LONG).show();
         }

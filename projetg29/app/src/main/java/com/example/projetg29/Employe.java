@@ -16,13 +16,23 @@ public class Employe extends Compte{
     }
 
     public void addService(Service service){
-        services.add(service.getName());
+        if(!containsService(service)) {
+            services.add(service.getName());
+        }
     }
 
     public boolean deleteService(String service_name){
         boolean result = false;
         if(services.contains(service_name)){
             services.remove(service_name);
+            result = true;
+        }
+        return result;
+    }
+
+    public boolean containsService(Service service){
+        boolean result = false;
+        if(services.contains(service.getName())){
             result = true;
         }
         return result;
