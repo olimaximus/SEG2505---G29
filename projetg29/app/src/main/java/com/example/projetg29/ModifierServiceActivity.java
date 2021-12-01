@@ -100,7 +100,8 @@ public class ModifierServiceActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void ajouterFormulaire(){
-        String info = input.getText().toString();
+        String info = input.getText().toString().trim();
+        info = info.replace(" ", "-");
         if(info.equals("")){
             Toast.makeText(getApplicationContext(), "Veuillez d'abord entrer une information", Toast.LENGTH_LONG).show();
         }
@@ -112,7 +113,8 @@ public class ModifierServiceActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void ajouterDocument(){
-        String info = input.getText().toString();
+        String info = input.getText().toString().trim();
+        info = info.replace(" ", "-");
         if(info.equals("")){
             Toast.makeText(getApplicationContext(), "Veuillez d'abord entrer une information", Toast.LENGTH_LONG).show();
         }

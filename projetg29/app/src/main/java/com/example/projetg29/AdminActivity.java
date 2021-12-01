@@ -147,7 +147,8 @@ public class AdminActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                String name = serviceName.getText().toString();
+                String name = serviceName.getText().toString().trim();
+                name = name.replace(" ", "-");
                 if(name.equals("")){
                     Toast.makeText(getApplicationContext(), "Nom de service invalide", Toast.LENGTH_LONG).show();
                 }

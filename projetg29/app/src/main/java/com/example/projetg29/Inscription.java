@@ -40,8 +40,8 @@ public class Inscription extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Récupérer le nom d'utilisateur et le mot de passe
-                username = username_edit.getText().toString();
-                password = password_edit.getText().toString();
+                username = username_edit.getText().toString().trim();
+                password = password_edit.getText().toString().trim();
 
 
                 // Login d'un administrateur: Un seul compte est possible pour l'instant, User: admin et Password: 123admin456
