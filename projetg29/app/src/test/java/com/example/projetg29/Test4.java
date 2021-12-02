@@ -12,7 +12,7 @@ public class Test2 {
 
     @Test
     public void getTypeTest(){
-    Compte compte = new ("test","123");
+    Compte compte = new Employe("test","123");
     Assert.AreEqual(compte.GetType(), typeof(compte));
     }
 }
