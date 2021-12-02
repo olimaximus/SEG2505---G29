@@ -215,7 +215,6 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
             MyDBHandler dbHandler = new MyDBHandler(EmployeActivity.this);
             dbHandler.deleteCompte(compte.getUsername(), "Employé");
             dbHandler.addEmploye(compte);
-            Toast.makeText(getApplicationContext(), "Try to update the text", Toast.LENGTH_LONG).show();
             updateText();
             Toast.makeText(getApplicationContext(), "Service ajouté avec succès", Toast.LENGTH_LONG).show();
         }

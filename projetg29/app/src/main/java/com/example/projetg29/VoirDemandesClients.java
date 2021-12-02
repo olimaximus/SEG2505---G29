@@ -20,8 +20,9 @@ public class VoirDemandesClients extends AppCompatActivity implements AdapterVie
         //Afficher les demandes des clients
         //Dropdown pour afficher les demandes des clients
         dropdown_service = findViewById(R.id.dropDown_demandes);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ####);
-        dropdown_service.setAdapter(adapter2);
+        //ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,####);
+        //dropdown_service.setAdapter(adapter2);
+        /*
         dropdown_service.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -36,6 +37,8 @@ public class VoirDemandesClients extends AppCompatActivity implements AdapterVie
 
             }
         });
+
+         */
 
 
         // Option du spinner
@@ -67,3 +70,5 @@ public class VoirDemandesClients extends AppCompatActivity implements AdapterVie
 
 
 }
+
+

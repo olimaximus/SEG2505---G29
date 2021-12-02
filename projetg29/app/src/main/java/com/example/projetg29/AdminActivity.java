@@ -223,4 +223,7 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
+    public void setCompte_a_supprimer(String compte_a_supprimer) {
+        this.compte_a_supprimer = compte_a_supprimer;
+    }
 }

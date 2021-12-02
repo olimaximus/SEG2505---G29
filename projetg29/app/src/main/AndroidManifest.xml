@@ -16,6 +16,9 @@
             android:name=".AdminActivity"
             android:exported="true" />
         <activity
+            android:name=".VoirDemandesClients"
+            android:exported="true" />
+        <activity
             android:name=".ModifierServiceActivity"
             android:exported="true" />
         <activity
