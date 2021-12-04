@@ -17,6 +17,14 @@ public class Employe extends Compte{
         return services;
     }
 
+    public String[] getServicesArray(){
+        String[] result = new String[services.size()];
+        for(int i = 0; i < services.size(); i++){
+            result[i] = services.get(i);
+        }
+        return result;
+    }
+
     public void addService(Service service){
         if(!containsService(service)) {
             services.add(service.getName());

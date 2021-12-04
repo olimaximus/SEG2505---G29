@@ -9,26 +9,46 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
+import java.util.LinkedList;
+/*
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 
+ */
+
 public class ClientActivity extends AppCompatActivity {
-    Client compte;
+    private Client compte;
+    private TextView welcomeText;
+    private String[] succursales;
+    private LinkedList<String> succursalesList;
+    private Spinner dropdown_succursales;
+    private String selected_succursale;
 
-    EditText editText;
-    Button btn;
+    private Spinner dropdown_Services;
+    private String[] services;
 
+    private EditText editText;
+    private Button btn;
+
+    /*
     StorageReference storageReference;
     DatabaseReference databaseReference;
     private Object StorageReference;
+
+     */
 
 
     @Override
@@ -36,9 +56,50 @@ public class ClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
 
+        // Définir les éléments du layout
         editText = findViewById(R.id.editTextClient);
         btn = findViewById(R.id.button8);
+        welcomeText = findViewById(R.id.textView5);
+        dropdown_succursales = findViewById(R.id.dropDown_Employes);
+        dropdown_Services = findViewById(R.id.dropDown_ServicesClient);
 
+
+        // Récuperer les informations de l'activité précédente
+        Bundle extras = getIntent().getExtras();
+        String username = extras.getString("user");
+        String password = extras.getString("password");
+
+        MyDBHandler dbHandler = new MyDBHandler(getApplicationContext());
+        compte = dbHandler.findClient(username);
+
+        // Créer la liste d'éléments du dropdown services
+        succursalesList = dbHandler.getAllEmployes();
+        if(succursalesList.size() == 0){
+            succursalesList.add("");
+        }
+        updateSuccursales();
+
+        // Élément sélectionné par le dropdown succursales
+        dropdown_succursales.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected_succursale = succursalesList.get(position);
+                try {
+                    updateServices();
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+        /*
         StorageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("uploadPDF");
         btn.setEnabled(false);
@@ -49,6 +110,9 @@ public class ClientActivity extends AppCompatActivity {
             }
         });
 
+         */
+
+        /*
         @Override
         protected void onActivityResult(int requestCode,int resultCode,@Nullable Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -68,26 +132,21 @@ public class ClientActivity extends AppCompatActivity {
 
         }
 
+         */
 
 
-        // Définir les éléments du layout
-        TextView textView = findViewById(R.id.textView5);
 
-        // Récuperer les informations de l'activité précédente
-        Bundle extras = getIntent().getExtras();
-        String username = extras.getString("user");
-        String password = extras.getString("password");
 
-        compte = new Client(username, password);
 
 
 
 
         // Mettre à jour le texte
-        textView.setText("Bienvenue "+compte.getUsername()+", vous êtes connecté en tant que Client");
+        welcomeText.setText("Bienvenue "+compte.getUsername()+", vous êtes connecté en tant que Client");
 
     }
 
+    /*
     private void uploadPDFfileFirebase(Uri data) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("File is loading...");
@@ -124,6 +183,32 @@ public class ClientActivity extends AppCompatActivity {
         intent.setType("applocation/pdf");
         intent.setAction(intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"PDF FILE SELECT"),12);
+    }
+
+     */
+    public void updateSuccursales(){
+        succursales = new String[succursalesList.size()];
+        for (int i = 0; i < succursales.length; i++) {
+            succursales[i] = succursalesList.get(i);
+        }
+        ArrayAdapter<String> adaptersuccursales = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, succursales);
+        dropdown_succursales.setAdapter(adaptersuccursales);
+    }
+
+    public void updateServices() throws JSONException {
+        if(!selected_succursale.equals("")) {
+            MyDBHandler dbHandler = new MyDBHandler(getApplicationContext());
+            Employe employe = dbHandler.findEmploye(selected_succursale);
+            services = employe.getServicesArray();
+            if (services.length == 0) {
+                services = new String[]{""};
+            }
+        }
+        else{
+            services = new String[]{""};
+        }
+        ArrayAdapter<String> adapterservices = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, services);
+        dropdown_Services.setAdapter(adapterservices);
     }
 
 }

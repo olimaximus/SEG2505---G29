@@ -167,4 +167,41 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
         return compte;
     }
+
+    public Client findClient(String username){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "Select * FROM " + TABLE_COMPTES + " WHERE " + COLUMN_USERNAME + " = \"" + username + "\" AND " + COLUMN_USERTYPE + " = \"" + "Client" + "\"";
+        Cursor cursor = db.rawQuery(query, null);
+        Client compte = null;
+        if(cursor.moveToFirst()){
+            if(cursor.getString(2).equals("Client")){
+                compte = new Client(cursor.getString(0), cursor.getString(1));
+
+            }
+            cursor.close();
+        }
+        db.close();
+        return compte;
+    }
+
+    public LinkedList<String> getAllEmployes() {
+        LinkedList<String> list = new LinkedList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "Select * FROM " + TABLE_COMPTES;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                String name = cursor.getString(0);
+                String type = cursor.getString(2);
+
+                if(type.equals("Employé")){
+                    list.add(name);
+                }
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        db.close();
+        return list;
+    }
 }
