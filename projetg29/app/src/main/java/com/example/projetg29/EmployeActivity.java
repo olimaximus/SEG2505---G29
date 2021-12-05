@@ -36,6 +36,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
     Button removeService;
     TextView servicesChoisis;
     Button enregistrerHeures;
+    int servicesRemplis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,12 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
         servicesList = dbServices.getAllServices();
         if(servicesList.size() == 0){
             servicesList.add(new Service());
+        }
+        servicesRemplis = 0;
+        for(int i = 0; i < servicesList.size(); i++){
+            if(servicesList.get(i).getName().contains("_")){
+                servicesRemplis += 1;
+            }
         }
         updateServices();
         try {
@@ -183,7 +190,7 @@ public class EmployeActivity extends AppCompatActivity  implements AdapterView.O
 
     // Mettre à jour le dropdown services
     public void updateServices(){
-        services = new String[servicesList.size()];
+        services = new String[servicesList.size()-servicesRemplis];
         for (int i = 0; i < services.length; i++) {
             services[i] = servicesList.get(i).getName();
         }

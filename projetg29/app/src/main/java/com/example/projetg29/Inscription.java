@@ -115,9 +115,13 @@ public class Inscription extends AppCompatActivity {
     }
 
     public void signup(Employe compte) throws JSONException {
+        if(compte.getUsername().equals("admin")){
+            Toast.makeText(getApplicationContext(), "Nom réservé",Toast.LENGTH_LONG).show();
+            return;
+        }
 
         MyDBHandler dbHandler = new MyDBHandler(this);
-        if(dbHandler.findCompte(compte.getUsername()) == null || (dbHandler.findCompte(compte.getUsername()) != null && !dbHandler.findCompte(compte.getUsername()).getType().equals("Employé"))) {
+        if(dbHandler.findEmploye(compte.getUsername()) == null) {
             dbHandler.addEmploye(compte);
             Toast.makeText(getApplicationContext(), "Compte créé avec succès", Toast.LENGTH_LONG).show();
         }
@@ -139,9 +143,13 @@ public class Inscription extends AppCompatActivity {
     }
 
     public void signup(Client compte){
+        if(compte.getUsername().equals("admin")){
+            Toast.makeText(getApplicationContext(), "Nom réservé",Toast.LENGTH_LONG).show();
+            return;
+        }
 
         MyDBHandler dbHandler = new MyDBHandler(this);
-        if(dbHandler.findCompte(compte.getUsername()) == null || (dbHandler.findCompte(compte.getUsername()) != null && !dbHandler.findCompte(compte.getUsername()).getType().equals("Client"))) {
+        if(dbHandler.findClient(compte.getUsername()) == null) {
             dbHandler.addCompte(compte);
             Toast.makeText(getApplicationContext(), "Compte créé avec succès", Toast.LENGTH_LONG).show();
         }

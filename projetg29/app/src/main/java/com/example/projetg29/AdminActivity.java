@@ -27,7 +27,9 @@ public class AdminActivity extends AppCompatActivity {
     private String[] services;
     private Spinner dropdown_service;
     private Service selected_service;
+    int servicesRemplis;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,13 @@ public class AdminActivity extends AppCompatActivity {
         if(servicesList.size() == 0){
             servicesList.add(new Service());
         }
+        servicesRemplis = 0;
+        for(int i = 0; i < servicesList.size(); i++){
+            if(servicesList.get(i).getName().contains("_")){
+                servicesRemplis += 1;
+            }
+        }
+
         updateServices();
 
 
@@ -152,6 +161,9 @@ public class AdminActivity extends AppCompatActivity {
                 if(name.equals("")){
                     Toast.makeText(getApplicationContext(), "Nom de service invalide", Toast.LENGTH_LONG).show();
                 }
+                else if(name.contains("_")){
+                    Toast.makeText(getApplicationContext(), "Charactère invalide", Toast.LENGTH_LONG).show();
+                }
                 else {
                     Service service = new Service(name);
                     // Retirer l'élément bidon qui fait fonctionner le dropdown
@@ -214,16 +226,16 @@ public class AdminActivity extends AppCompatActivity {
 
     }
     public void updateServices(){
-        services = new String[servicesList.size()];
+        services = new String[servicesList.size()-servicesRemplis];
         for (int i = 0; i < services.length; i++) {
-            services[i] = servicesList.get(i).getName();
+            if(!servicesList.get(i).getName().contains("_")) {
+                services[i] = servicesList.get(i).getName();
+            }
         }
         ArrayAdapter<String> adapterservice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, services);
         dropdown_service.setAdapter(adapterservice);
 
     }
 
-    public void setCompte_a_supprimer(String compte_a_supprimer) {
-        this.compte_a_supprimer = compte_a_supprimer;
-    }
+
 }
