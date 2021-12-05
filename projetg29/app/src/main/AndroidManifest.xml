@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Projetg29">
         <activity
+            android:name=".RemplirServiceActivity"
+            android:exported="false" />
+        <activity
             android:name=".ClientActivity"
             android:exported="true" />
         <activity

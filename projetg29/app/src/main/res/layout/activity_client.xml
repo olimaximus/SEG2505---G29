@@ -23,14 +23,14 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="192dp"
+        android:layout_marginTop="84dp"
         android:hint="Sélectionnez le fichier"
         android:textColor="#0000FF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dropDown_ServicesClient"
+        app:layout_constraintTop_toBottomOf="@+id/btn_RemplirService"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -88,4 +88,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dropDown_Employes" />
+
+    <Button
+        android:id="@+id/btn_RemplirService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Faire une demande de service"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dropDown_ServicesClient" />
 </androidx.constraintlayout.widget.ConstraintLayout>

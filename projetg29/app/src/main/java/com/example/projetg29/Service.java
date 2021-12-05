@@ -25,16 +25,22 @@ public class Service {
     // Ex: Preuve de domicile, "photo de la preuve de domicile"
 
     private String name;
+    private String employe;
+    private String client;
 
     public Service(String name){
         this.name = name;
         formulaire = new HashMap<>();
         document = new HashMap<>();
+        employe = null;
+        client = null;
     }
     public Service(){
         name = "";
         formulaire = new HashMap<>();
         document = new HashMap<>();
+        employe = null;
+        client = null;
     }
 
     public Service(String name, HashMap<String, String> formulaire, HashMap<String, Intent> document){
@@ -142,6 +148,19 @@ public class Service {
         JSONObject jsonObject = new JSONObject(newMap);
         String result = jsonObject.toString();
         return result;
+    }
+
+    public String getEmploye(){
+        return employe;
+    }
+
+    public String getClient(){
+        return client;
+    }
+
+    public void assignTo(String employe, String client){
+        this.employe = employe;
+        this.client = client;
     }
 
 

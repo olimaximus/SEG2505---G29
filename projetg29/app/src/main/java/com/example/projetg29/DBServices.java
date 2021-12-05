@@ -21,12 +21,14 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 public class DBServices extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "serviceDB.db";
     public static final String TABLE_SERVICES = "services";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_FORMULAIRE = "formulaire";
     public static final String COLUMN_DOCUMENT = "document";
+    public static final String COLUMN_EMPLOYE = "employe";
+    public static final String COLUMN_CLIENT = "client";
 
     public DBServices(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -35,7 +37,7 @@ public class DBServices extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_SERVICES_TABLE = "CREATE TABLE "+ TABLE_SERVICES + "("+ COLUMN_NAME + " TEXT,"
-                + COLUMN_FORMULAIRE + " TEXT," + COLUMN_DOCUMENT + " TEXT"+ ")";
+                + COLUMN_FORMULAIRE + " TEXT," + COLUMN_DOCUMENT + " TEXT,"+ COLUMN_EMPLOYE + " TEXT," + COLUMN_CLIENT + " TEXT"+ ")";
         db.execSQL(CREATE_SERVICES_TABLE);
     }
 
@@ -52,6 +54,8 @@ public class DBServices extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, service.getName());
         values.put(COLUMN_FORMULAIRE, service.getFormulaireMap());
         values.put(COLUMN_DOCUMENT, service.getDocumentMap());
+        values.put(COLUMN_EMPLOYE, service.getEmploye());
+        values.put(COLUMN_CLIENT, service.getClient());
         db.insert(TABLE_SERVICES, null, values);
         db.close();
     }
@@ -101,6 +105,7 @@ public class DBServices extends SQLiteOpenHelper {
                 exception.printStackTrace();
             }
             service = new Service(serviceName, formulaire, document);
+            service.assignTo(cursor.getString(3), cursor.getString(4));
             cursor.close();
         } else{
             service = null;

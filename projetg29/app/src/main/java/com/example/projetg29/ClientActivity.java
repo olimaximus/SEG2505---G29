@@ -39,9 +39,11 @@ public class ClientActivity extends AppCompatActivity {
 
     private Spinner dropdown_Services;
     private String[] services;
+    private String selected_service;
 
     private EditText editText;
     private Button btn;
+    private Button btn_RemplirService;
 
     /*
     StorageReference storageReference;
@@ -62,6 +64,7 @@ public class ClientActivity extends AppCompatActivity {
         welcomeText = findViewById(R.id.textView5);
         dropdown_succursales = findViewById(R.id.dropDown_Employes);
         dropdown_Services = findViewById(R.id.dropDown_ServicesClient);
+        btn_RemplirService = findViewById(R.id.btn_RemplirService);
 
 
         // Récuperer les informations de l'activité précédente
@@ -97,7 +100,30 @@ public class ClientActivity extends AppCompatActivity {
             }
         });
 
+        // Élément sélectionné par le dropdown services
+        dropdown_Services.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected_service = services[position];
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        // Mettre à jour le texte
+        welcomeText.setText("Bienvenue "+compte.getUsername()+", vous êtes connecté en tant que Client");
+
+
+        //Fonction du bouton remplir service
+        btn_RemplirService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRemplirService();
+            }
+        });
 
         /*
         StorageReference = FirebaseStorage.getInstance().getReference();
@@ -133,16 +159,6 @@ public class ClientActivity extends AppCompatActivity {
         }
 
          */
-
-
-
-
-
-
-
-
-        // Mettre à jour le texte
-        welcomeText.setText("Bienvenue "+compte.getUsername()+", vous êtes connecté en tant que Client");
 
     }
 
@@ -209,6 +225,18 @@ public class ClientActivity extends AppCompatActivity {
         }
         ArrayAdapter<String> adapterservices = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, services);
         dropdown_Services.setAdapter(adapterservices);
+    }
+
+    public void openRemplirService(){
+        if(selected_service.equals("")){
+            Toast.makeText(getApplicationContext(), "Veuillez d'abord choisir un service", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else{
+            Intent intent = new Intent(ClientActivity.this, RemplirServiceActivity.class);
+            intent.putExtra("Service", selected_service);
+            startActivity(intent);
+        }
     }
 
 }
