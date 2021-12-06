@@ -80,7 +80,11 @@ public class ClientActivity extends AppCompatActivity {
         if(succursalesList.size() == 0){
             succursalesList.add("");
         }
-        updateSuccursales();
+        try {
+            updateSuccursales();
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
 
         // Élément sélectionné par le dropdown succursales
         dropdown_succursales.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -202,10 +206,12 @@ public class ClientActivity extends AppCompatActivity {
     }
 
      */
-    public void updateSuccursales(){
+    public void updateSuccursales() throws JSONException {
         succursales = new String[succursalesList.size()];
+        MyDBHandler dbHandler = new MyDBHandler(getApplicationContext());
         for (int i = 0; i < succursales.length; i++) {
-            succursales[i] = succursalesList.get(i);
+            Employe employe = dbHandler.findEmploye(succursalesList.get(i));
+            succursales[i] = succursalesList.get(i)+" ("+employe.getHeures()+")";
         }
         ArrayAdapter<String> adaptersuccursales = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, succursales);
         dropdown_succursales.setAdapter(adaptersuccursales);

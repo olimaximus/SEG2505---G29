@@ -226,6 +226,6 @@ public class RemplirServiceActivity extends AppCompatActivity {
         DBServices dbServices = new DBServices(getApplicationContext());
         dbServices.deleteService(serviceName);
         dbServices.addService(service);
-        Toast.makeText(getApplicationContext(), serviceName, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Demande soumise avec succès", Toast.LENGTH_LONG).show();
     }
 }
