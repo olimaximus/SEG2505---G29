@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 public class DBServices extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "serviceDB.db";
     public static final String TABLE_SERVICES = "services";
     public static final String COLUMN_NAME = "name";

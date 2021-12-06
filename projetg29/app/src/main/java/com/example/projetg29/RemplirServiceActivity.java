@@ -1,18 +1,28 @@
 package com.example.projetg29;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class RemplirServiceActivity extends AppCompatActivity {
     private TextView textServiceName;
@@ -28,6 +38,7 @@ public class RemplirServiceActivity extends AppCompatActivity {
     private int selectedInfo;
     EditText editAlertInfo;
     DialogInterface.OnClickListener enterInfo;
+
 
 
 
@@ -92,13 +103,20 @@ public class RemplirServiceActivity extends AppCompatActivity {
             }
         };
 
-
-
+        // Fonction du bouton remplir document
+        btn_EditDocument.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addImage();
+            }
+        });
 
 
 
     }
 
+
+    // Mettre à jour le texte du formulaire
     public void updateFormulaire(){
         formulaireKeys = service.getInfoKeys();
         String result = "Formulaire:\n";
@@ -108,12 +126,13 @@ public class RemplirServiceActivity extends AppCompatActivity {
         textFormulaire.setText(result);
     }
 
+    // Mettre à jour le texte du document
     public void updateDocument(){
         documentKeys = service.getImageKeys();
         String result = "Documents:\n";
         for(int i = 0; i < documentKeys.length; i++){
             String image = "Image";
-            if(service.getImage(documentKeys[i]).getStringExtra("imageUri")== null){
+            if(service.getImage(documentKeys[i]).getExtras().get("imageUri").toString().equals("")){
                 image = "";
             }
             result = result+"\n"+documentKeys[i]+" : "+image;
@@ -121,6 +140,7 @@ public class RemplirServiceActivity extends AppCompatActivity {
         textDocument.setText(result);
     }
 
+    // Ajouter une information au formulaire
     public void addInfo(){
         String input = editInfoName.getText().toString().trim();
         input = input.replace(" ", "-");
@@ -146,4 +166,39 @@ public class RemplirServiceActivity extends AppCompatActivity {
         }
     }
 
+    // Ajouter une image aux documents
+    public  void addImage(){
+        String input = editInfoName.getText().toString().trim();
+        input = input.replace(" ", "-");
+        boolean isContained = false;
+        for(int i = 0; i<documentKeys.length; i++){
+            if(documentKeys[i].equals(input)){
+                isContained = true;
+                selectedInfo = i;
+                break;
+            }
+        }
+        if(!isContained){
+            Toast.makeText(getApplicationContext(), "Veuillez entrer le nom d'une information contenu dans les documents", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Intent camera_intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(camera_intent, 1);
+        }
+    }
+
+
+    // Récupérer l'image de la galerie photo
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == RESULT_OK && null != data){
+            Uri uri = data.getData();
+            data.putExtra("imageUri", uri);
+            service.setImage(documentKeys[selectedInfo], data);
+            updateDocument();
+            Toast.makeText(getApplicationContext(), "Image ajoutée aux documents", Toast.LENGTH_LONG).show();
+        }
+    }
 }

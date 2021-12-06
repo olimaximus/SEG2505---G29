@@ -161,7 +161,7 @@ public class AdminActivity extends AppCompatActivity {
                 if(name.equals("")){
                     Toast.makeText(getApplicationContext(), "Nom de service invalide", Toast.LENGTH_LONG).show();
                 }
-                else if(name.contains("_")){
+                else if(name.contains("_")||name.contains("'")){
                     Toast.makeText(getApplicationContext(), "Charactère invalide", Toast.LENGTH_LONG).show();
                 }
                 else {
