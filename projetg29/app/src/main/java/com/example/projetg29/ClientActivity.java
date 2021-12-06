@@ -235,6 +235,8 @@ public class ClientActivity extends AppCompatActivity {
         else{
             Intent intent = new Intent(ClientActivity.this, RemplirServiceActivity.class);
             intent.putExtra("Service", selected_service);
+            intent.putExtra("Employé", selected_succursale);
+            intent.putExtra("Client", compte.getUsername());
             startActivity(intent);
         }
     }

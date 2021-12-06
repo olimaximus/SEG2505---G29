@@ -6,4 +6,12 @@ public class Client extends Compte{
         super(username, password);
         setType("Client");
     }
+
+    public Service demanderService(Service service, String employeName){
+        String name = service.getName();
+        name = name+"_E"+employeName+"_C"+this.getUsername();
+        service.setName(name);
+        service.assignTo(employeName, this.getUsername());
+        return service;
+    }
 }

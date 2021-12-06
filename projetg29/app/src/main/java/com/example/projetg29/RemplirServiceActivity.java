@@ -36,8 +36,11 @@ public class RemplirServiceActivity extends AppCompatActivity {
     private String[] formulaireKeys;
     private String[] documentKeys;
     private int selectedInfo;
-    EditText editAlertInfo;
-    DialogInterface.OnClickListener enterInfo;
+    private EditText editAlertInfo;
+    private DialogInterface.OnClickListener enterInfo;
+    private String succursale;
+    private Client client;
+    private Button btn_SoumettreDemande;
 
 
 
@@ -54,6 +57,7 @@ public class RemplirServiceActivity extends AppCompatActivity {
         editInfoName = findViewById(R.id.editNomInfo);
         btn_EditFormulaire = findViewById(R.id.btn_RemplirFormulaire);
         btn_EditDocument = findViewById(R.id.btn_RemplirDocument);
+        btn_SoumettreDemande = findViewById(R.id.btn_soumettreDemande);
 
 
 
@@ -61,6 +65,9 @@ public class RemplirServiceActivity extends AppCompatActivity {
         // Récupérer les infos de l'activité précédente
         Bundle extras = getIntent().getExtras();
         serviceName = extras.getString("Service");
+        succursale = extras.getString("Employé");
+        MyDBHandler dbHandler = new MyDBHandler(getApplicationContext());
+        client = dbHandler.findClient(extras.getString("Client"));
         DBServices dbServices = new DBServices(getApplicationContext());
         service = dbServices.findService(serviceName);
         textServiceName.setText(service.getName());
@@ -108,6 +115,15 @@ public class RemplirServiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addImage();
+            }
+        });
+
+        // Fonction du bouton soumettre demande
+        btn_SoumettreDemande.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                soumettreDemande();
             }
         });
 
@@ -200,5 +216,16 @@ public class RemplirServiceActivity extends AppCompatActivity {
             updateDocument();
             Toast.makeText(getApplicationContext(), "Image ajoutée aux documents", Toast.LENGTH_LONG).show();
         }
+    }
+
+    // Soumettre la demande
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void soumettreDemande(){
+        service = client.demanderService(service, succursale);
+        serviceName = service.getName();
+        DBServices dbServices = new DBServices(getApplicationContext());
+        dbServices.deleteService(serviceName);
+        dbServices.addService(service);
+        Toast.makeText(getApplicationContext(), serviceName, Toast.LENGTH_LONG).show();
     }
 }

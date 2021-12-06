@@ -42,6 +42,10 @@ public class Inscription extends AppCompatActivity {
                 // Récupérer le nom d'utilisateur et le mot de passe
                 username = username_edit.getText().toString().trim();
                 password = password_edit.getText().toString().trim();
+                if(username.contains("_")){
+                    Toast.makeText(getApplicationContext(), "Charactère invalide", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
 
                 // Login d'un administrateur: Un seul compte est possible pour l'instant, User: admin et Password: 123admin456
