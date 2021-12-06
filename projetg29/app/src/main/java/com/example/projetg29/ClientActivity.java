@@ -45,13 +45,6 @@ public class ClientActivity extends AppCompatActivity {
     private Button btn;
     private Button btn_RemplirService;
 
-    /*
-    StorageReference storageReference;
-    DatabaseReference databaseReference;
-    private Object StorageReference;
-
-     */
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +52,6 @@ public class ClientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_client);
 
         // Définir les éléments du layout
-        editText = findViewById(R.id.editTextClient);
-        btn = findViewById(R.id.button8);
         welcomeText = findViewById(R.id.textView5);
         dropdown_succursales = findViewById(R.id.dropDown_Employes);
         dropdown_Services = findViewById(R.id.dropDown_ServicesClient);
@@ -129,83 +120,10 @@ public class ClientActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        StorageReference = FirebaseStorage.getInstance().getReference();
-        databaseReference = FirebaseDatabase.getInstance().getReference("uploadPDF");
-        btn.setEnabled(false);
-        editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectPDF();
-            }
-        });
 
-         */
-
-        /*
-        @Override
-        protected void onActivityResult(int requestCode,int resultCode,@Nullable Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-
-            if(requestCode == 12 && resultCode == RESULT_OK && data != null && data.getData()!=null){{
-                btn.setEnabled(true);
-                editText.setText(data.getDataString().substring(data.getDataString().lastIndexOf("/")+1));
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        uploadPDFfileFirebase(data.getData());
-                    }
-                });
-            }
-            }
-
-
-        }
-
-         */
 
     }
 
-    /*
-    private void uploadPDFfileFirebase(Uri data) {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("File is loading...");
-        progressDialog.show();
-        storageReference reference = storageReference.child("upload" + System.currentTimeMillis() + ".pdf");
-        reference.File(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
-            @Override
-            public void onSuccess(uploadTask.TaskSnapshot taskSnapshot){
-
-                Task<Uri> uriTask = taskSnapshot.getStrorage().getDownloadUri();
-                while (!uriTask.isComplete());
-                Uri uri = uriTask.getResult();
-
-                putPDF putPDF = new putPDF(editText.getText().toString(),uri.toString());
-                databaseReference.child(databaseReference.push().getKey()).setValue(putPDF);
-                Toast.makeText(ClientActivity.this, "file upload",Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
-                )
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>(){
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot){
-
-                double progress = (100.0 * snapshot.getBytesTrandferres())/getTotalByteCount();
-                progressDialog.setCancelMessage("File Upload..." + (int) progress+"%");
-
-
-            }
-        });
-    }
-
-    private void selectPDF() {
-        Intent intent = new Intent();
-        intent.setType("applocation/pdf");
-        intent.setAction(intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"PDF FILE SELECT"),12);
-    }
-
-     */
     public void updateSuccursales() throws JSONException {
         succursales = new String[succursalesList.size()];
         MyDBHandler dbHandler = new MyDBHandler(getApplicationContext());
