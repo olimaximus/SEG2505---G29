@@ -27,7 +27,6 @@ public class AdminActivity extends AppCompatActivity {
     private String[] services;
     private Spinner dropdown_service;
     private Service selected_service;
-    int servicesRemplis;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -91,15 +90,6 @@ public class AdminActivity extends AppCompatActivity {
         if(servicesList.size() == 0){
             servicesList.add(new Service());
         }
-        servicesRemplis = 0;
-
-        for(int i = 0; i < servicesList.size(); i++){
-            if(servicesList.get(i).getName().contains("_")){
-                servicesRemplis += 1;
-            }
-        }
-
-
 
         updateServices();
 
@@ -229,11 +219,9 @@ public class AdminActivity extends AppCompatActivity {
 
     }
     public void updateServices(){
-        services = new String[servicesList.size()-servicesRemplis];
+        services = new String[servicesList.size()];
         for (int i = 0; i < services.length; i++) {
-            if(!servicesList.get(i).getName().contains("_")) {
-                services[i] = servicesList.get(i).getName();
-            }
+            services[i] = servicesList.get(i).getName();
         }
         ArrayAdapter<String> adapterservice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, services);
         dropdown_service.setAdapter(adapterservice);

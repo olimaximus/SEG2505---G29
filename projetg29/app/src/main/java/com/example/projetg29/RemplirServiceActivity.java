@@ -221,11 +221,11 @@ public class RemplirServiceActivity extends AppCompatActivity {
     // Soumettre la demande
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void soumettreDemande(){
-        service = client.demanderService(service, succursale);
-        serviceName = service.getName();
+        Service serviceRempli = client.demanderService(service, succursale);
         DBServices dbServices = new DBServices(getApplicationContext());
-        dbServices.deleteService(serviceName);
-        dbServices.addService(service);
+        dbServices.deleteService(serviceRempli.getName());
+        dbServices.addService(serviceRempli);
+        service = dbServices.findService(serviceName);
         Toast.makeText(getApplicationContext(), "Demande soumise avec succès", Toast.LENGTH_LONG).show();
     }
 }

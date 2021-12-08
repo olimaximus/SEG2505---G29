@@ -156,6 +156,10 @@ public class ClientActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Veuillez d'abord choisir un service", Toast.LENGTH_LONG).show();
             return;
         }
+        DBServices dbServices = new DBServices(getApplicationContext());
+        if(dbServices.findService(selected_service) == null){
+            Toast.makeText(getApplicationContext(), "Ce service à été supprimé par l'administrateur", Toast.LENGTH_LONG).show();
+        }
         else{
             Intent intent = new Intent(ClientActivity.this, RemplirServiceActivity.class);
             intent.putExtra("Service", selected_service);

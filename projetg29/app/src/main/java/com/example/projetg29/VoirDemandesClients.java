@@ -9,9 +9,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
+import java.util.LinkedList;
+
 public class VoirDemandesClients extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner dropdown_service;
+    private LinkedList<Service> servicesList;
+    private Employe compte;
+    private String[] services;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,25 +27,26 @@ public class VoirDemandesClients extends AppCompatActivity implements AdapterVie
         //Afficher les demandes des clients
         //Dropdown pour afficher les demandes des clients
         dropdown_service = findViewById(R.id.dropDown_demandes);
-        //ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,####);
-        //dropdown_service.setAdapter(adapter2);
-        /*
-        dropdown_service.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String select = ####[position];
-                int i = select.indexOf(' ');
-                #### = select.substring(0, i);
-                #### = select.substring(i+2, select.length()-1);
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+        //Récupérer les informations de l'activité précédente
+        Bundle extras = getIntent().getExtras();
+        MyDBHandler dbHandler = new MyDBHandler(getApplicationContext());
+        try {
+            compte = dbHandler.findEmploye(extras.getString("Employé"));
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
 
-            }
-        });
+        //Créer la liste du dropdown services
+        DBServices dbServices = new DBServices(getApplicationContext());
+        servicesList = dbServices.getAllServicesRemplis(compte);
+        if(servicesList.size() == 0){
+            servicesList.add(new Service());
+        }
 
-         */
+        updateServices();
+
+
 
 
         // Option du spinner
@@ -54,8 +62,7 @@ public class VoirDemandesClients extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(),text,Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -67,6 +74,23 @@ public class VoirDemandesClients extends AppCompatActivity implements AdapterVie
     //A ecrire apres avoir fait les fonctionnalites du client
 
 
+
+
+    // Mettre le dropdown services à jour
+    public void updateServices(){
+        services = new String[servicesList.size()];
+        for (int i = 0; i < services.length; i++) {
+            String name = servicesList.get(i).getName();
+            String employe = servicesList.get(i).getEmploye();
+            name = name.replace("_E"+employe+"_C"," (");
+            services[i] = name + ")";
+        }
+        if(services[0].equals(")")){
+            services[0] = "";
+        }
+        ArrayAdapter<String> adapterservice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, services);
+        dropdown_service.setAdapter(adapterservice);
+    }
 
 
 }

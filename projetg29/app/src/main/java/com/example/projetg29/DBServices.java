@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 public class DBServices extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 10;
     private static final String DATABASE_NAME = "serviceDB.db";
     public static final String TABLE_SERVICES = "services";
     public static final String COLUMN_NAME = "name";
@@ -139,8 +139,47 @@ public class DBServices extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             while(!cursor.isAfterLast()){
                 String servicename = cursor.getString(0);
+                if(!servicename.contains("_")){
+                    list.add(findService(servicename));
+                }
+                cursor.moveToNext();
 
-                list.add(findService(servicename));
+            }
+        }
+        return list;
+    }
+
+    // Retourne la liste de toutes les demandes recue par une succursale
+    public LinkedList<Service> getAllServicesRemplis(Employe employe){
+        LinkedList<Service> list = new LinkedList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "Select * FROM " + TABLE_SERVICES;
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                String servicename = cursor.getString(0);
+                if(servicename.contains("_E"+employe.getUsername())){
+                    list.add(findService(servicename));
+                }
+                cursor.moveToNext();
+
+            }
+        }
+        return list;
+    }
+
+    // Retourne la liste de toutes les demandes faites par un client
+    public LinkedList<Service> getAllServicesRemplis(Client client){
+        LinkedList<Service> list = new LinkedList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "Select * FROM " + TABLE_SERVICES;
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                String servicename = cursor.getString(0);
+                if(servicename.contains("_C"+client.getUsername())){
+                    list.add(findService(servicename));
+                }
                 cursor.moveToNext();
 
             }
