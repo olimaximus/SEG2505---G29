@@ -64,4 +64,48 @@ public class Test1 {
         assertFalse(service.deleteInfo("Nom"));
     }
 
+    // Livrable 4
+
+    @Test
+    public void testSetHeure(){
+        Employe employe = new Employe("test", "123");
+        employe.setHeures("6h-18h");
+        assertEquals("6h-18h", employe.getHeures());
+    }
+
+    @Test
+    public void testAssignServiceName(){
+        Service service1 = new Service("Test");
+        Employe employe = new Employe("Bob", "123");
+        Client client = new Client("Steve", "123");
+        Service service2 = client.demanderService(service1, employe.getUsername());
+        assertEquals("Test_EBob_CSteve", service2.getName());
+    }
+
+    @Test
+    public void testAssignServiceClient(){
+        Service service1 = new Service("Test");
+        Employe employe = new Employe("Bob", "123");
+        Client client = new Client("Steve", "123");
+        Service service2 = client.demanderService(service1, employe.getUsername());
+        assertEquals("Steve", service2.getClient());
+    }
+
+    @Test
+    public void testAssignServiceEmploye(){
+        Service service1 = new Service("Test");
+        Employe employe = new Employe("Bob", "123");
+        Client client = new Client("Steve", "123");
+        Service service2 = client.demanderService(service1, employe.getUsername());
+        assertEquals("Bob", service2.getEmploye());
+    }
+
+    @Test
+    public void testEmployeContainsService(){
+        Service service = new Service("Test");
+        Employe employe = new Employe("Bob", "123");
+        employe.addService(service);
+        assertTrue(employe.containsService(service));
+    }
+
 }
