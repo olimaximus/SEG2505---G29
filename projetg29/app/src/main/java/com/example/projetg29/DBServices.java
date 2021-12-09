@@ -186,4 +186,10 @@ public class DBServices extends SQLiteOpenHelper {
         }
         return list;
     }
+
+    public boolean deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SERVICES, null, null);
+        return true;
+    }
 }

@@ -65,6 +65,12 @@ public class Inscription extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Tous les comptes ont été supprimés", Toast.LENGTH_LONG).show();
                 }
 
+                else if(username.equals("deleteServices")){
+                    DBServices dbServices = new DBServices(getApplicationContext());
+                    dbServices.deleteAll();
+                    Toast.makeText(getApplicationContext(), "Tous les services ont été supprimés", Toast.LENGTH_LONG).show();
+                }
+
                 // Login d'un employé: Pas de nom ou de mot de passe vide
                 else if(user_type.equals("employé")){
                     if(username.equals("") || password.equals("")){
